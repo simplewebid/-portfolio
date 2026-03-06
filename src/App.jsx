@@ -31,82 +31,6 @@ const MarqueeBanner = () => (
   </div>
 );
 
-/* ── API Key Banner ── */
-const ApiKeyBanner = ({ apiKey, onSet }) => {
-  const [val, setVal]       = useState('');
-  const [show, setShow]     = useState(true);
-  const [saved, setSaved]   = useState(false);
-
-  if (!show || apiKey) return null;
-
-  const save = () => {
-    if (!val.trim()) return;
-    onSet(val.trim());
-    setSaved(true);
-    setTimeout(() => setShow(false), 1500);
-  };
-
-  return (
-    <div
-      className="fixed bottom-5 right-5 z-50 p-5 rounded-2xl max-w-xs w-full shadow-2xl"
-      style={{
-        background: 'rgba(0, 0, 0, 0.96)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
-        boxShadow: '0 0 40px rgba(255, 255, 255, 0.04)',
-      }}
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <p className="text-white text-sm font-semibold" style={{ fontFamily: 'Josefin Sans, sans-serif' }}>
-            Claude AI Features
-          </p>
-          <p className="text-gray-500 text-xs mt-0.5" style={{ fontFamily: 'Inter, sans-serif' }}>
-            Add your API key to enable AI bio generator & smart auto-reply
-          </p>
-        </div>
-        <button
-          onClick={() => setShow(false)}
-          className="text-gray-600 hover:text-gray-400 ml-2 mt-0.5 text-lg leading-none"
-        >×</button>
-      </div>
-
-      {saved ? (
-        <p className="text-emerald-400 text-sm text-center py-2" style={{ fontFamily: 'Inter, sans-serif' }}>
-          ✅ API key saved!
-        </p>
-      ) : (
-        <div className="flex gap-2">
-          <input
-            type="password"
-            placeholder="sk-ant-api03-..."
-            value={val}
-            onChange={e => setVal(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && save()}
-            className="flex-1 px-3 py-2 rounded-lg text-white text-xs placeholder-gray-600"
-            style={{
-              background: 'rgba(255,255,255,0.07)',
-              border: '1px solid rgba(255,255,255,0.18)',
-              fontFamily: 'Inter, sans-serif',
-              outline: 'none',
-            }}
-          />
-          <button
-            onClick={save}
-            className="gradient-btn px-4 py-2 rounded-lg text-xs font-semibold shrink-0"
-            style={{ fontFamily: 'Inter, sans-serif' }}
-          >
-            Set
-          </button>
-        </div>
-      )}
-      <p className="text-gray-700 text-xs mt-2 leading-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-        Key stays in memory only, never stored.
-      </p>
-    </div>
-  );
-};
-
 /* ── Back-to-top button ── */
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
@@ -139,12 +63,6 @@ const BackToTop = () => {
 
 /* ── Main App ── */
 const App = () => {
-  const apiKeyFromEnv = typeof import.meta !== 'undefined'
-    ? (import.meta.env?.VITE_ANTHROPIC_API_KEY || '')
-    : '';
-
-  const [apiKey, setApiKey] = useState(apiKeyFromEnv);
-
   /* ── Scroll-reveal IntersectionObserver ── */
   useEffect(() => {
     const register = () => {
@@ -192,17 +110,16 @@ const App = () => {
 
       {/* ── Fixed UI ── */}
       <Navbar />
-      <ApiKeyBanner apiKey={apiKey} onSet={setApiKey} />
       <BackToTop />
 
       {/* ── Page sections ── */}
       <main>
         <Hero />
         <MarqueeBanner />
-        <About   apiKey={apiKey} />
+        <About />
         <OrbitalSection />
         <Work />
-        <Contact apiKey={apiKey} />
+        <Contact />
       </main>
 
       <Footer />

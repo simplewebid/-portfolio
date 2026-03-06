@@ -1,26 +1,11 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
-/* ── Claude API helper (re-used from About) ── */
-const callClaude = async (apiKey, prompt) => {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6-20250514',
-      max_tokens: 350,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'API error');
-  return data.content?.[0]?.text || '';
-};
+const SERVICE_ID      = 'service_e5pxh3o'
+const TEMPLATE_ID     = 'template_wzrfyhj'
+const PUBLIC_KEY      = 'xC0MtDrHjaEktFDxD'
+const WHATSAPP_NUMBER = '6285840017984'
 
 /* ── Contact info items ── */
 const INFO = [
@@ -64,45 +49,46 @@ const Field = ({ label, children }) => (
 );
 
 /* ── Contact Section ── */
-const Contact = ({ apiKey }) => {
-  const INIT = { name: '', email: '', message: '' };
-  const [form, setForm]           = useState(INIT);
-  const [loading, setLoading]     = useState(false);
-  const [reply, setReply]         = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError]         = useState('');
+const Contact = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [loading, setLoading]   = useState(false)
+  const [status, setStatus]     = useState('')
 
-  const onChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    let autoReply = `Thank you for reaching out, ${form.name}! I've received your message and will get back to you within 24 hours. Looking forward to connecting! — Afri Ansyah`;
-
-    if (apiKey) {
-      try {
-        const prompt = `Generate a warm, professional auto-reply email for a portfolio contact form.
-
-Sender name: ${form.name}
-Sender email: ${form.email}
-Message: ${form.message}
-
-Write a friendly, concise auto-reply (3–4 sentences). Acknowledge their specific message, tell them Afri Ansyah will respond within 24 hours, and express genuine enthusiasm. Sign off as "Afri Ansyah". Keep the tone professional but human — no clichés.`;
-        autoReply = await callClaude(apiKey, prompt);
-      } catch (err) {
-        // Use fallback reply silently
-        console.warn('Claude API error, using fallback reply:', err.message);
-      }
+  const handleEmail = async (e) => {
+    e.preventDefault()
+    if (!formData.name || !formData.email || !formData.message) {
+      setStatus('empty')
+      return
     }
+    setLoading(true)
+    try {
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        from_name:  formData.name,
+        from_email: formData.email,
+        message:    formData.message,
+        name:       formData.name,
+        email:      formData.email,
+      }, PUBLIC_KEY)
+      setStatus('success')
+      setFormData({ name: '', email: '', message: '' })
+    } catch (error) {
+      setStatus('error')
+    }
+    setLoading(false)
+  }
 
-    setReply(autoReply);
-    setSubmitted(true);
-    setLoading(false);
-  };
-
-  const reset = () => { setSubmitted(false); setForm(INIT); setReply(''); setError(''); };
+  const handleWhatsApp = () => {
+    if (!formData.name || !formData.message) {
+      setStatus('empty')
+      return
+    }
+    const text = `Halo Afri! Saya ${formData.name}.\n\n${formData.message}\n\nEmail: ${formData.email}`
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank')
+  }
 
   return (
     <section
@@ -206,128 +192,96 @@ Write a friendly, concise auto-reply (3–4 sentences). Acknowledge their specif
 
           {/* ── Right: Form / Success ── */}
           <div className="reveal-right">
-            {submitted ? (
-              <div
-                className="glass-card p-8 md:p-10 rounded-3xl text-center success-card"
-                style={{ border: '1px solid rgba(255,255,255,0.15)' }}
+            <form
+              onSubmit={handleEmail}
+              className="glass-card p-8 md:p-10 rounded-3xl space-y-6"
+              style={{ border: '1px solid rgba(255,255,255,0.10)' }}
+            >
+              <h3
+                className="text-xl font-bold text-white mb-2"
+                style={{ fontFamily: 'Josefin Sans, sans-serif' }}
               >
-                <div className="w-12 h-12 rounded-full glass-card flex items-center justify-center mx-auto mb-4" style={{ border: '1px solid rgba(255,255,255,0.20)' }}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} className="w-6 h-6"><polyline points="20 6 9 17 4 12" /></svg>
-                </div>
-                <h3
-                  className="text-2xl font-bold text-white mb-3"
-                  style={{ fontFamily: 'Josefin Sans, sans-serif' }}
-                >
-                  Message Sent!
-                </h3>
-                <p className="text-gray-400 text-xs mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Here's your auto-reply (powered by Claude AI):
-                </p>
-                <div
-                  className="text-left p-5 rounded-2xl mb-6 text-sm text-gray-300 leading-relaxed whitespace-pre-line"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                >
-                  {reply}
-                </div>
-                <button
-                  onClick={reset}
-                  className="gradient-btn px-7 py-3 rounded-full text-sm font-semibold"
-                  style={{ fontFamily: 'Inter, sans-serif' }}
-                >
-                  Send Another Message
-                </button>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="glass-card p-8 md:p-10 rounded-3xl space-y-6"
-                style={{ border: '1px solid rgba(255,255,255,0.10)' }}
-              >
-                <h3
-                  className="text-xl font-bold text-white mb-2"
-                  style={{ fontFamily: 'Josefin Sans, sans-serif' }}
-                >
-                  Send Me a Message
-                </h3>
+                Send Me a Message
+              </h3>
 
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Your Name">
-                    <input
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={onChange}
-                      required
-                      placeholder="John Doe"
-                      className="dark-input"
-                    />
-                  </Field>
-                  <Field label="Email Address">
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={onChange}
-                      required
-                      placeholder="john@example.com"
-                      className="dark-input"
-                    />
-                  </Field>
-                </div>
-
-                <Field label="Subject">
+              <div className="grid sm:grid-cols-2 gap-5">
+                <Field label="Your Name">
                   <input
                     type="text"
-                    name="subject"
-                    placeholder="Project Proposal / Job Offer / Just saying hi…"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
                     className="dark-input"
                   />
                 </Field>
-
-                <Field label="Message">
-                  <textarea
-                    name="message"
-                    value={form.message}
-                    onChange={onChange}
-                    required
-                    placeholder="Tell me about your project, timeline, and budget…"
-                    rows={5}
-                    className="dark-input resize-none"
+                <Field label="Email Address">
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="john@example.com"
+                    className="dark-input"
                   />
                 </Field>
+              </div>
 
-                {error && (
-                  <p className="text-red-400 text-xs" style={{ fontFamily: 'Inter, sans-serif' }}>{error}</p>
-                )}
+              <Field label="Subject">
+                <input
+                  type="text"
+                  name="subject"
+                  placeholder="Project Proposal / Job Offer / Just saying hi…"
+                  className="dark-input"
+                />
+              </Field>
 
+              <Field label="Message">
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Tell me about your project, timeline, and budget…"
+                  rows={5}
+                  className="dark-input resize-none"
+                />
+              </Field>
+
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <button
                   type="submit"
+                  onClick={handleEmail}
                   disabled={loading}
-                  className="gradient-btn w-full py-4 rounded-xl font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ fontFamily: 'Inter, sans-serif' }}
+                  style={{
+                    background: loading ? '#333' : '#fff',
+                    color: '#000', padding: '12px 28px',
+                    border: 'none', borderRadius: '8px',
+                    fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s', fontFamily: 'Inter, sans-serif',
+                  }}
                 >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                      </svg>
-                      Sending…
-                    </span>
-                  ) : 'Send Message'}
+                  {loading ? 'Sending...' : 'Send Email'}
                 </button>
 
-                <p className="text-center text-gray-600 text-xs" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  {apiKey
-                    ? 'Auto-reply powered by Claude AI'
-                    : 'Set your API key to enable AI auto-reply'}
-                </p>
-              </form>
-            )}
+                <button
+                  type="button"
+                  onClick={handleWhatsApp}
+                  style={{
+                    background: '#25D366', color: '#fff',
+                    padding: '12px 28px', border: 'none',
+                    borderRadius: '8px', fontWeight: 700,
+                    cursor: 'pointer', transition: 'all 0.2s',
+                    fontFamily: 'Inter, sans-serif',
+                  }}
+                >
+                  WhatsApp
+                </button>
+              </div>
+
+              {status === 'success' && <p style={{ color: '#4ade80', marginTop: '12px', fontFamily: 'Inter, sans-serif' }}>✓ Pesan terkirim ke email!</p>}
+              {status === 'error'   && <p style={{ color: '#f87171', marginTop: '12px', fontFamily: 'Inter, sans-serif' }}>✗ Gagal kirim, coba WhatsApp.</p>}
+              {status === 'empty'   && <p style={{ color: '#fbbf24', marginTop: '12px', fontFamily: 'Inter, sans-serif' }}>⚠ Isi semua field dulu!</p>}
+            </form>
           </div>
 
         </div>
