@@ -11,20 +11,23 @@ import kue1  from '../assets/kua1.png';
 import kue2  from '../assets/kue2.png';
 import kue3  from '../assets/kue3.png';
 import kue4  from '../assets/kue4.png';
+import handtrack1 from '../assets/handtrack1.png';
+import handtrack2 from '../assets/handtrack2.png';
+import kostin1 from '../assets/kostin1.png';
+import kostin2 from '../assets/kostin2.png';
+import kostin3 from '../assets/kostin3.png';
+import kostin4 from '../assets/kostin4.png';
+import joki1 from '../assets/joki1.png';
+import joki2 from '../assets/joki2.png';
+import joki3 from '../assets/joki3.png';
+import joki4 from '../assets/joki4.png';
+import seria1 from '../assets/seria1.png';
+import seria2 from '../assets/seria2.png';
+import seria3 from '../assets/seria3.png';
+import seria4 from '../assets/seria4.png';
+import seria5 from '../assets/seria5.png';
 
 /* ── Icons ── */
-const GithubIcon = ({ className = 'w-5 h-5' }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-  </svg>
-);
-const LinkIcon = ({ className = 'w-5 h-5' }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-    <polyline points="15 3 21 3 21 9" />
-    <line x1="10" y1="14" x2="21" y2="3" />
-  </svg>
-);
 const ChevronLeft = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
     <polyline points="15 18 9 12 15 6" />
@@ -185,21 +188,53 @@ const PROJECTS = [
     subtitle: 'Mobile App — Android',
     description:
       'Aplikasi manajemen keuangan Android khusus mahasiswa Universitas Negeri Padang. Dilengkapi fitur login menggunakan NIM, pencatatan transaksi harian, pengelolaan budget per kategori, dan laporan keuangan berupa grafik interaktif.',
-    tech: ['Flutter', 'Dart', 'SQLite', 'Provider'],
+    tech: ['Flutter', 'Dart', 'SQLite', 'sqflite', 'Provider', 'Google Fonts', 'Material Design', 'url_launcher'],
     images: [saku1, saku2, saku3, saku4, saku5, saku6],
-    github: 'https://github.com/Afriansyah',
-    demo: '#',
   },
   {
     id: 2,
+    title: 'Kost.in UNP',
+    subtitle: 'Mobile App — Flutter',
+    description:
+      'Aplikasi mobile untuk pencarian dan manajemen kost di sekitar Universitas Negeri Padang. Dilengkapi fitur pencarian kost, detail lokasi, kontak pemilik via WhatsApp, dan peta lokasi. Dibangun dengan Flutter dan database lokal SQLite.',
+    tech: ['Flutter', 'Dart', 'SQLite', 'sqflite', 'Provider', 'Google Fonts', 'Material Design', 'url_launcher'],
+    images: [kostin1, kostin2, kostin3, kostin4],
+  },
+  {
+    id: 3,
     title: 'Kue By Tys',
     subtitle: 'Web — React',
     description:
       'Website toko kue online modern dengan tampilan elegan. Menampilkan katalog produk kue, section promo, testimoni pelanggan, dan Instagram feed. Dibangun dengan React TypeScript dan Tailwind CSS.',
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
     images: [kue1, kue2, kue3, kue4],
-    github: 'https://github.com/Afriansyah',
-    demo: '#',
+  },
+  {
+    id: 4,
+    title: 'Joki Tugas Website',
+    subtitle: 'Web — HTML/CSS/JS',
+    description:
+      'Website jasa penyelesaian tugas akademik terpercaya. Dilengkapi fitur hero section animasi, carousel testimoni pelanggan, halaman kontak, dan garansi 100% original dengan revisi gratis. Dibangun dengan HTML, CSS, dan JavaScript murni.',
+    tech: ['HTML5', 'CSS3', 'JavaScript', 'Font Awesome', 'AOS Animation', 'Google Fonts'],
+    images: [joki1, joki2, joki3, joki4],
+  },
+  {
+    id: 5,
+    title: 'Seria Kopi',
+    subtitle: 'WEB — NEXT.JS',
+    description:
+      'Website kedai kopi modern dengan desain elegan dan animasi halus. Menampilkan menu kopi, galeri produk, dan pengalaman visual yang memanjakan. Dibangun dengan Next.js 14 App Router, TypeScript, dan Framer Motion untuk animasi yang smooth.',
+    tech: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Playfair Display', 'React Icons'],
+    images: [seria1, seria2, seria3, seria4, seria5],
+  },
+  {
+    id: 6,
+    title: 'HandTrack AR Web',
+    subtitle: 'WEB — AR',
+    description:
+      'Aplikasi Augmented Reality berbasis web yang mendeteksi gerakan tangan secara real-time menggunakan MediaPipe Hands. Menampilkan efek neon cyan skeleton pada tangan dengan background Matrix Rain karakter Jepang. Berjalan langsung di browser tanpa instalasi apapun.',
+    tech: ['JavaScript', 'MediaPipe', 'Canvas API', 'WebRTC', 'CSS3'],
+    images: [handtrack1, handtrack2],
   },
 ];
 
@@ -289,28 +324,6 @@ const Work = () => (
                     <span key={t} className="tech-tag">{t}</span>
                   ))}
                 </div>
-
-                {/* Action links */}
-                <div className="flex items-center gap-6">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 text-sm font-medium group"
-                    style={{ fontFamily: 'Inter, sans-serif' }}
-                  >
-                    <GithubIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    Source Code
-                  </a>
-                  <a
-                    href={project.demo}
-                    className="flex items-center gap-2 font-semibold text-sm transition-all duration-200 hover:gap-3 group"
-                    style={{ color: '#c0c0c0', fontFamily: 'Inter, sans-serif' }}
-                  >
-                    <LinkIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    Live Demo
-                  </a>
-                </div>
               </div>
             </div>
           );
@@ -333,7 +346,6 @@ const Work = () => (
           onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 25px rgba(255,255,255,0.15)'; }}
           onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
         >
-          <GithubIcon className="w-5 h-5" />
           View All Projects on GitHub
         </a>
       </div>

@@ -298,38 +298,7 @@ const Hero = () => {
 
           {/* ── RIGHT: 3D lanyard + ID card ── */}
           <div className="flex justify-center items-start pt-8 animate-fade-up delay-500" style={{ minHeight: '480px' }}>
-            <div style={{ position: 'relative' }}>
-              <Lanyard3D profileImg={profileImg} />
-
-              {/* Floating badges */}
-              <div
-                className="absolute -bottom-5 -left-8 glass-card px-4 py-2.5 rounded-2xl animate-float"
-                style={{ border: '1px solid rgba(255,255,255,0.15)', zIndex: 3 }}
-              >
-                <span className="text-white text-xs font-semibold flex items-center gap-2" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>✦</span>
-                  Mhs. UNP 2025
-                </span>
-              </div>
-              <div
-                className="absolute -top-5 -right-8 glass-card px-4 py-2.5 rounded-2xl animate-float-slow"
-                style={{ border: '1px solid rgba(255,255,255,0.15)', zIndex: 3 }}
-              >
-                <span className="text-white text-xs font-semibold flex items-center gap-2" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  <span style={{ fontSize: '0.85rem', opacity: 0.7, fontFamily: 'monospace' }}>&lt;/&gt;</span>
-                  3+ Projects
-                </span>
-              </div>
-              <div
-                className="absolute top-1/2 -right-12 transform -translate-y-1/2 glass-card px-4 py-2.5 rounded-2xl animate-float"
-                style={{ border: '1px solid rgba(255,255,255,0.12)', animationDelay: '1s', zIndex: 3 }}
-              >
-                <span className="text-white text-xs font-semibold flex items-center gap-2" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>●</span>
-                  Available
-                </span>
-              </div>
-            </div>
+            <Lanyard3D profileImg={profileImg} />
           </div>
 
         </div>

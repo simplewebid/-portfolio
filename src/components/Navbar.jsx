@@ -80,22 +80,6 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* ── Desktop CTA ── */}
-        <div className="hidden md:flex items-center gap-3">
-          <a
-            href="/resume.pdf"
-            download
-            className="text-sm font-medium px-5 py-2 rounded-full transition-all duration-300 hover:scale-105"
-            style={{
-              border: '1px solid rgba(255, 255, 255, 0.35)',
-              color: '#ffffff',
-              fontFamily: 'Inter, sans-serif',
-            }}
-          >
-            Resume ↓
-          </a>
-        </div>
-
         {/* ── Hamburger ── */}
         <button
           className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative"
@@ -154,20 +138,6 @@ const Navbar = () => {
               </button>
             </li>
           ))}
-          <li className="pt-3 border-t border-gray-800">
-            <a
-              href="/resume.pdf"
-              download
-              className="block text-center py-3 px-4 rounded-xl text-sm font-medium"
-              style={{
-                border: '1px solid rgba(255, 255, 255, 0.30)',
-                color: '#ffffff',
-                fontFamily: 'Inter, sans-serif',
-              }}
-            >
-              Download Resume ↓
-            </a>
-          </li>
         </ul>
       </div>
     </nav>

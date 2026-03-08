@@ -24,7 +24,7 @@ const techs = [
 
 const STATS = [
   { Icon: GraduationCap, value: '2025', label: 'Angkatan UNP'    },
-  { Icon: Rocket,        value: '3+',   label: 'Projects Shipped' },
+  { Icon: Rocket,        value: '6',    label: 'Projects Shipped' },
   { Icon: Layers,        value: '12+',  label: 'Technologies'     },
   { Icon: Cpu,           value: '#1',   label: 'Flutter Focus'    },
 ];

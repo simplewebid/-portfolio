@@ -216,6 +216,10 @@ body {
   from { opacity: 0; transform: scale(0.8); }
   to   { opacity: 1; transform: scale(1);   }
 }
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 8px #4ade80; opacity: 1; }
+  50% { box-shadow: 0 0 16px #4ade80, 0 0 24px #4ade80; opacity: 0.7; }
+}
 
 /* ============================================================
    ANIMATION UTILITY CLASSES
