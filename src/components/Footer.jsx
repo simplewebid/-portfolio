@@ -52,22 +52,8 @@ const Footer = () => {
     <footer style={{ background: '#0d0d0d', overflow: 'hidden' }}>
 
       {/* ── 4-col grid ── */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '72px 80px 48px',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '40px',
-            marginBottom: '64px',
-          }}
-        >
+      <div className="footer-inner">
+        <div className="footer-cols">
           {/* COL 1 — LINKS */}
           <div>
             <span style={colHead}>Links</span>

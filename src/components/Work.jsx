@@ -225,13 +225,7 @@ const ProjectRow = ({ project, index }) => {
       {/* Expanded details */}
       {open && (
         <div
-          style={{
-            padding: '0 0 40px',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '48px',
-            alignItems: 'start',
-          }}
+          className="work-detail-grid"
         >
           {/* Images */}
           <div>

@@ -97,7 +97,7 @@ const About = () => {
         style={{
           maxWidth: '1280px',
           margin: '0 auto',
-          padding: '100px 80px 72px',
+          padding: 'clamp(60px,8vw,100px) clamp(20px,6vw,80px) clamp(48px,6vw,72px)',
         }}
       >
         {/* Huge title */}
@@ -129,16 +129,12 @@ const About = () => {
           initial={{ opacity: 0, y: 60 }}
           animate={bioInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '300px 1fr',
-            gap: '60px',
-            alignItems: 'center',
-            margin: '60px 0',
-          }}
+          className="about-bio-grid"
+          style={{}}
         >
           {/* LEFT: Photo */}
           <div
+            className="about-photo"
             style={{
               width: '280px',
               height: '340px',
@@ -193,16 +189,8 @@ const About = () => {
           initial={{ opacity: 0, y: 60 }}
           animate={statsInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.76, 0, 0.24, 1] }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '1px',
-            background: '#d0d0d0',
-            border: '1px solid #d0d0d0',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            marginBottom: '0',
-          }}
+          className="about-stats-grid"
+          style={{}}
         >
           {[
             { target: 2025, suffix: '',  label: 'Angkatan UNP' },

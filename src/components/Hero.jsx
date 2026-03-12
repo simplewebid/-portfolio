@@ -17,10 +17,10 @@ const Hero = () => {
     <section id="home" style={{ background: '#EBEBEB', minHeight: '100vh', position: 'relative' }}>
 
       {/* Fixed vertical line left */}
-      <div style={{ position: 'fixed', left: '68px', top: '200px', width: '1px', height: '120px', background: '#ccc', zIndex: 5 }} />
+      <div className="hero-line-left" style={{ position: 'fixed', left: '68px', top: '200px', width: '1px', height: '120px', background: '#ccc', zIndex: 5 }} />
 
       {/* CENTER TEXT */}
-      <div style={{ textAlign: 'center', paddingTop: '140px', paddingBottom: '60px', position: 'relative', zIndex: 2 }}>
+      <div style={{ textAlign: 'center', paddingTop: 'clamp(100px, 16vw, 140px)', paddingBottom: '60px', paddingLeft: '20px', paddingRight: '20px', position: 'relative', zIndex: 2 }}>
 
         {/* Tag line */}
         <div style={{ overflow: 'hidden', marginBottom: '24px' }}>

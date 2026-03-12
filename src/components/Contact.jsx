@@ -109,15 +109,7 @@ const Contact = () => {
     >
       <div
         ref={sectionRef}
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '100px 80px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '80px',
-          alignItems: 'start',
-        }}
+        className="contact-section-grid"
       >
         {/* ── LEFT: info ── */}
         <motion.div

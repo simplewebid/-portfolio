@@ -308,6 +308,63 @@ a, button { cursor: none; }
   display: block;
 }
 
+/* ============================================================
+   RESPONSIVE GRID / LAYOUT CLASSES
+   ============================================================ */
+.about-bio-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 60px;
+  align-items: center;
+  margin: 60px 0;
+}
+
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #d0d0d0;
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.contact-section-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 100px clamp(20px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 72px clamp(20px, 6vw, 80px) 48px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  margin-bottom: 64px;
+}
+
+.work-detail-grid {
+  padding: 0 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ============================================================
+   MOBILE — max-width: 768px
+   ============================================================ */
 @media (max-width: 768px) {
   .cursor-dot, .cursor-ring { display: none; }
   html, body, a, button { cursor: auto; }
@@ -315,5 +372,48 @@ a, button { cursor: none; }
   .footer-huge-text {
     font-size: clamp(32px, 10vw, 80px);
     letter-spacing: -2px;
+  }
+
+  /* Navbar */
+  .social-left-bar { display: none !important; }
+  .hero-line-left  { display: none !important; }
+
+  /* About */
+  .about-bio-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin: 40px 0;
+  }
+  .about-photo {
+    width: 100% !important;
+    max-width: 240px !important;
+    height: 280px !important;
+    margin: 0 auto !important;
+  }
+  .about-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Contact */
+  .contact-section-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 60px clamp(20px, 6vw, 40px);
+  }
+
+  /* Footer */
+  .footer-inner {
+    padding: 48px clamp(20px, 6vw, 40px) 32px;
+  }
+  .footer-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+    margin-bottom: 40px;
+  }
+
+  /* Work expanded detail */
+  .work-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
 }
