@@ -1,211 +1,54 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
-/* ── Real project screenshots ── */
-import saku1 from '../assets/Saku1.png';
-import saku2 from '../assets/saku2.png';
-import saku3 from '../assets/saku3.png';
-import saku4 from '../assets/saku4.png';
-import saku5 from '../assets/saku5.png';
-import saku6 from '../assets/saku6.png';
-import kue1  from '../assets/kua1.png';
-import kue2  from '../assets/kue2.png';
-import kue3  from '../assets/kue3.png';
-import kue4  from '../assets/kue4.png';
+import saku1    from '../assets/Saku1.png';
+import saku2    from '../assets/saku2.png';
+import saku3    from '../assets/saku3.png';
+import saku4    from '../assets/saku4.png';
+import saku5    from '../assets/saku5.png';
+import saku6    from '../assets/saku6.png';
+import kue1     from '../assets/kua1.png';
+import kue2     from '../assets/kue2.png';
+import kue3     from '../assets/kue3.png';
+import kue4     from '../assets/kue4.png';
 import handtrack1 from '../assets/handtrack1.png';
 import handtrack2 from '../assets/handtrack2.png';
-import kostin1 from '../assets/kostin1.png';
-import kostin2 from '../assets/kostin2.png';
-import kostin3 from '../assets/kostin3.png';
-import kostin4 from '../assets/kostin4.png';
-import joki1 from '../assets/joki1.png';
-import joki2 from '../assets/joki2.png';
-import joki3 from '../assets/joki3.png';
-import joki4 from '../assets/joki4.png';
-import seria1 from '../assets/seria1.png';
-import seria2 from '../assets/seria2.png';
-import seria3 from '../assets/seria3.png';
-import seria4 from '../assets/seria4.png';
-import seria5 from '../assets/seria5.png';
+import kostin1  from '../assets/kostin1.png';
+import kostin2  from '../assets/kostin2.png';
+import kostin3  from '../assets/kostin3.png';
+import kostin4  from '../assets/kostin4.png';
+import joki1    from '../assets/joki1.png';
+import joki2    from '../assets/joki2.png';
+import joki3    from '../assets/joki3.png';
+import joki4    from '../assets/joki4.png';
+import seria1   from '../assets/seria1.png';
+import seria2   from '../assets/seria2.png';
+import seria3   from '../assets/seria3.png';
+import seria4   from '../assets/seria4.png';
+import seria5   from '../assets/seria5.png';
 
-/* ── Icons ── */
-const ChevronLeft = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-    <polyline points="15 18 9 12 15 6" />
-  </svg>
-);
-const ChevronRight = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
-
-/* ── Image Slider ── */
-const ImageSlider = ({ images, title }) => {
-  const [current, setCurrent] = useState(0);
-  const [transitioning, setTransitioning] = useState(false);
-
-  const goTo = useCallback((idx) => {
-    if (transitioning) return;
-    setTransitioning(true);
-    setCurrent(idx);
-    setTimeout(() => setTransitioning(false), 320);
-  }, [transitioning]);
-
-  const prev = () => goTo((current - 1 + images.length) % images.length);
-  const next = useCallback(() => goTo((current + 1) % images.length), [current, goTo, images.length]);
-
-  /* Auto-slide every 3 s */
-  useEffect(() => {
-    const id = setInterval(next, 3000);
-    return () => clearInterval(id);
-  }, [next]);
-
-  return (
-    <div style={{ width: '100%' }}>
-      {/* ── Main image ── */}
-      <div
-        className="relative group"
-        style={{
-          borderRadius: '12px',
-          overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.10)',
-          boxShadow: '0 16px 48px rgba(0,0,0,0.55)',
-        }}
-      >
-        <img
-          src={images[current]}
-          alt={`${title} screenshot ${current + 1}`}
-          className="project-main-image"
-          style={{
-            opacity: transitioning ? 0 : 1,
-            transition: 'opacity 0.28s ease',
-          }}
-        />
-
-        {/* Bottom gradient */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.65), transparent)' }}
-        />
-
-        {/* Prev arrow */}
-        <button
-          onClick={prev}
-          aria-label="Previous"
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center
-                     text-white opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
-          style={{ background: 'rgba(0,0,0,0.65)', border: '1px solid rgba(255,255,255,0.18)', backdropFilter: 'blur(4px)' }}
-        >
-          <ChevronLeft />
-        </button>
-
-        {/* Next arrow */}
-        <button
-          onClick={next}
-          aria-label="Next"
-          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center
-                     text-white opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
-          style={{ background: 'rgba(0,0,0,0.65)', border: '1px solid rgba(255,255,255,0.18)', backdropFilter: 'blur(4px)' }}
-        >
-          <ChevronRight />
-        </button>
-
-        {/* Dot indicators */}
-        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              style={{
-                width: i === current ? '20px' : '6px',
-                height: '6px',
-                borderRadius: '9999px',
-                background: i === current ? '#ffffff' : 'rgba(255,255,255,0.35)',
-                transition: 'all 0.3s ease',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Counter badge */}
-        <div
-          className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-semibold"
-          style={{
-            background: 'rgba(0,0,0,0.60)',
-            color: 'rgba(255,255,255,0.70)',
-            fontFamily: 'Inter, sans-serif',
-            backdropFilter: 'blur(4px)',
-            border: '1px solid rgba(255,255,255,0.10)',
-          }}
-        >
-          {current + 1} / {images.length}
-        </div>
-      </div>
-
-      {/* ── Thumbnail strip ── */}
-      <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
-        {images.map((img, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`View screenshot ${i + 1}`}
-            style={{
-              width: '80px',
-              height: '45px',
-              borderRadius: '6px',
-              overflow: 'hidden',
-              flexShrink: 0,
-              padding: 0,
-              cursor: 'pointer',
-              border: i === current
-                ? '2px solid rgba(255,255,255,0.80)'
-                : '1px solid rgba(255,255,255,0.12)',
-              background: '#0a0a0a',
-              transition: 'border-color 0.2s ease',
-            }}
-          >
-            <img
-              src={img}
-              alt={`thumb ${i + 1}`}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
-            />
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-/* ── Projects data ── */
 const PROJECTS = [
   {
     id: 1,
     title: 'Aplikasi Saku',
     subtitle: 'Mobile App — Android',
-    description:
-      'Aplikasi manajemen keuangan Android khusus mahasiswa Universitas Negeri Padang. Dilengkapi fitur login menggunakan NIM, pencatatan transaksi harian, pengelolaan budget per kategori, dan laporan keuangan berupa grafik interaktif.',
-    tech: ['Flutter', 'Dart', 'SQLite', 'sqflite', 'Provider', 'Google Fonts', 'Material Design', 'url_launcher'],
+    description: 'Aplikasi manajemen keuangan Android khusus mahasiswa Universitas Negeri Padang. Dilengkapi fitur login menggunakan NIM, pencatatan transaksi harian, pengelolaan budget per kategori, dan laporan keuangan berupa grafik interaktif.',
+    tech: ['Flutter', 'Dart', 'SQLite', 'sqflite', 'Provider', 'Material Design'],
     images: [saku1, saku2, saku3, saku4, saku5, saku6],
   },
   {
     id: 2,
     title: 'Kost.in UNP',
     subtitle: 'Mobile App — Flutter',
-    description:
-      'Aplikasi mobile untuk pencarian dan manajemen kost di sekitar Universitas Negeri Padang. Dilengkapi fitur pencarian kost, detail lokasi, kontak pemilik via WhatsApp, dan peta lokasi. Dibangun dengan Flutter dan database lokal SQLite.',
-    tech: ['Flutter', 'Dart', 'SQLite', 'sqflite', 'Provider', 'Google Fonts', 'Material Design', 'url_launcher'],
+    description: 'Aplikasi mobile untuk pencarian dan manajemen kost di sekitar Universitas Negeri Padang. Dilengkapi fitur pencarian kost, detail lokasi, kontak pemilik via WhatsApp, dan peta lokasi. Dibangun dengan Flutter dan database lokal SQLite.',
+    tech: ['Flutter', 'Dart', 'SQLite', 'Provider', 'url_launcher'],
     images: [kostin1, kostin2, kostin3, kostin4],
   },
   {
     id: 3,
     title: 'Kue By Tys',
     subtitle: 'Web — React',
-    description:
-      'Website toko kue online modern dengan tampilan elegan. Menampilkan katalog produk kue, section promo, testimoni pelanggan, dan Instagram feed. Dibangun dengan React TypeScript dan Tailwind CSS.',
+    description: 'Website toko kue online modern dengan tampilan elegan. Menampilkan katalog produk kue, section promo, testimoni pelanggan. Dibangun dengan React TypeScript dan Tailwind CSS.',
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
     images: [kue1, kue2, kue3, kue4],
   },
@@ -213,144 +56,378 @@ const PROJECTS = [
     id: 4,
     title: 'Joki Tugas Website',
     subtitle: 'Web — HTML/CSS/JS',
-    description:
-      'Website jasa penyelesaian tugas akademik terpercaya. Dilengkapi fitur hero section animasi, carousel testimoni pelanggan, halaman kontak, dan garansi 100% original dengan revisi gratis. Dibangun dengan HTML, CSS, dan JavaScript murni.',
-    tech: ['HTML5', 'CSS3', 'JavaScript', 'Font Awesome', 'AOS Animation', 'Google Fonts'],
+    description: 'Website jasa penyelesaian tugas akademik terpercaya. Dilengkapi hero section animasi, carousel testimoni, halaman kontak, dan garansi 100% original dengan revisi gratis.',
+    tech: ['HTML5', 'CSS3', 'JavaScript', 'AOS Animation'],
     images: [joki1, joki2, joki3, joki4],
   },
   {
     id: 5,
     title: 'Seria Kopi',
-    subtitle: 'WEB — NEXT.JS',
-    description:
-      'Website kedai kopi modern dengan desain elegan dan animasi halus. Menampilkan menu kopi, galeri produk, dan pengalaman visual yang memanjakan. Dibangun dengan Next.js 14 App Router, TypeScript, dan Framer Motion untuk animasi yang smooth.',
-    tech: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Playfair Display', 'React Icons'],
+    subtitle: 'Web — Next.js',
+    description: 'Website kedai kopi modern dengan desain elegan dan animasi halus. Menampilkan menu kopi, galeri produk, dan pengalaman visual yang memanjakan. Dibangun dengan Next.js 14, TypeScript, dan Framer Motion.',
+    tech: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
     images: [seria1, seria2, seria3, seria4, seria5],
   },
   {
     id: 6,
     title: 'HandTrack AR Web',
-    subtitle: 'WEB — AR',
-    description:
-      'Aplikasi Augmented Reality berbasis web yang mendeteksi gerakan tangan secara real-time menggunakan MediaPipe Hands. Menampilkan efek neon cyan skeleton pada tangan dengan background Matrix Rain karakter Jepang. Berjalan langsung di browser tanpa instalasi apapun.',
-    tech: ['JavaScript', 'MediaPipe', 'Canvas API', 'WebRTC', 'CSS3'],
+    subtitle: 'Web — AR / WebRTC',
+    description: 'Aplikasi Augmented Reality berbasis web yang mendeteksi gerakan tangan secara real-time menggunakan MediaPipe Hands. Menampilkan efek neon skeleton pada tangan dengan background Matrix Rain. Berjalan langsung di browser.',
+    tech: ['JavaScript', 'MediaPipe', 'Canvas API', 'WebRTC'],
     images: [handtrack1, handtrack2],
   },
 ];
 
-/* ── Work Section ── */
-const Work = () => (
-  <section
-    id="work"
-    className="py-32 relative overflow-hidden"
-    style={{ background: 'linear-gradient(180deg, #000000 0%, #080808 60%, #000000 100%)' }}
-  >
-    {/* Ambient blob */}
-    <div
-      className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none"
-      style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%)', filter: 'blur(90px)' }}
-    />
+const MARQUEE_NAMES = 'APLIKASI SAKU \u2022 KOST.IN UNP \u2022 KUE BY TYS \u2022 JOKI TUGAS \u2022 SERIA KOPI \u2022 HANDTRACK AR \u2022 ';
 
-    <div className="relative z-10 max-w-7xl mx-auto px-6">
+/* ── Single project row ── */
+const ProjectRow = ({ project, index }) => {
+  const [open, setOpen]       = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const rowRef = useRef(null);
+  const isInView = useInView(rowRef, { once: true, margin: '-80px' });
 
-      {/* Section heading */}
-      <div className="text-center mb-20">
-        <p className="section-label reveal" style={{ color: '#888888', fontFamily: 'Inter, sans-serif' }}>
-          PORTFOLIO
-        </p>
-        <h2
-          className="text-4xl md:text-6xl font-bold text-white reveal"
-          style={{ fontFamily: 'Josefin Sans, sans-serif' }}
-        >
-          Recent <span className="gradient-text">Work</span>
-        </h2>
-        <div className="heading-divider reveal" />
-      </div>
+  const handleMouseMove = useCallback((e) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  }, []);
 
-      {/* Project rows */}
-      <div>
-        {PROJECTS.map((project, idx) => {
-          const isEven = idx % 2 === 0;
-          return (
-            <div
-              key={project.id}
-              className="project-card"
+  return (
+    <motion.div
+      ref={rowRef}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      style={{ borderBottom: '1px solid #d0d0d0', position: 'relative' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Row header (clickable) */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%',
+          padding: '28px 0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: 'none',
+          border: 'none',
+          textAlign: 'left',
+          cursor: 'pointer',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '20px' }}>
+          <span
+            style={{
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '12px',
+              color: '#aaa',
+              letterSpacing: '1px',
+              minWidth: '28px',
+              flexShrink: 0,
+            }}
+          >
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          {/* Title with overflow:hidden clip reveal + hover stretch */}
+          <div style={{ overflow: 'hidden' }}>
+            <motion.span
+              initial={{ y: '110%' }}
+              animate={isInView ? { y: '0%' } : {}}
+              transition={{ duration: 0.7, delay: 0.1 + index * 0.08, ease: [0.76, 0, 0.24, 1] }}
               style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '60px',
-                alignItems: 'center',
-                padding: '80px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                display: 'block',
+                fontFamily: 'Josefin Sans, sans-serif',
+                fontSize: 'clamp(24px, 3.5vw, 52px)',
+                fontWeight: 800,
+                color: '#111',
+                letterSpacing: hovered ? '0px' : '-1.5px',
+                lineHeight: 1,
+                transition: 'letter-spacing 0.4s cubic-bezier(0.76,0,0.24,1)',
               }}
             >
-              {/* Image side — left on even, right on odd */}
-              <div
-                className={`reveal-${isEven ? 'left' : 'right'}`}
-                style={{ order: isEven ? 1 : 2 }}
-              >
-                <ImageSlider images={project.images} title={project.title} />
-              </div>
+              {project.title}
+            </motion.span>
+          </div>
+        </div>
 
-              {/* Text side — right on even, left on odd */}
-              <div
-                className={`reveal-${isEven ? 'right' : 'left'}`}
-                style={{ order: isEven ? 2 : 1 }}
-              >
-                <span
-                  className="text-xs font-semibold tracking-widest uppercase"
-                  style={{ color: '#888888', fontFamily: 'Inter, sans-serif', letterSpacing: '0.25em' }}
-                >
-                  Featured Project — {project.subtitle}
-                </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0, marginLeft: '20px' }}>
+          <motion.span
+            initial={{ opacity: 0, x: 10 }}
+            animate={hovered ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            style={{
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '11px',
+              color: '#888',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+            }}
+          >
+            {project.subtitle}
+          </motion.span>
+          <div
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              border: `1px solid ${open ? '#111' : '#d0d0d0'}`,
+              background: open ? '#111' : 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              transition: 'background 0.25s, border-color 0.25s, transform 0.35s',
+              transform: open ? 'rotate(45deg)' : 'none',
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke={open ? 'white' : '#111'} strokeWidth={2} strokeLinecap="round" width="14" height="14">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </div>
+        </div>
+      </button>
 
-                <h3
-                  className="text-3xl md:text-4xl font-bold text-white mt-3 mb-5"
-                  style={{ fontFamily: 'Josefin Sans, sans-serif' }}
-                >
-                  {project.title}
-                </h3>
+      {/* Floating preview image on hover */}
+      <AnimatePresence>
+        {hovered && !open && project.images[0] && (
+          <motion.div
+            key="preview"
+            initial={{ opacity: 0, scale: 0.85, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 5 }}
+            transition={{ duration: 0.25, ease: [0.76, 0, 0.24, 1] }}
+            style={{
+              position: 'fixed',
+              left: mousePos.x + 24,
+              top: mousePos.y - 90,
+              width: '240px',
+              height: '155px',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              border: '1px solid #d0d0d0',
+              pointerEvents: 'none',
+              zIndex: 200,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+            }}
+          >
+            <img
+              src={project.images[0]}
+              alt={project.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-                {/* Description */}
-                <div className="glass-card project-card-glow p-6 rounded-2xl mb-6">
-                  <p className="text-gray-300 text-sm leading-relaxed" style={{ fontFamily: 'Inter, sans-serif' }}>
-                    {project.description}
-                  </p>
-                </div>
-
-                {/* Tech tags */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {project.tech.map(t => (
-                    <span key={t} className="tech-tag">{t}</span>
-                  ))}
-                </div>
-              </div>
+      {/* Expanded details */}
+      {open && (
+        <div
+          style={{
+            padding: '0 0 40px',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '48px',
+            alignItems: 'start',
+          }}
+        >
+          {/* Images */}
+          <div>
+            <div
+              style={{
+                borderRadius: '10px',
+                overflow: 'hidden',
+                border: '1px solid #d0d0d0',
+                marginBottom: '12px',
+              }}
+            >
+              <img
+                src={project.images[0]}
+                alt={project.title}
+                style={{ width: '100%', height: '220px', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
+              />
             </div>
-          );
-        })}
+            {project.images.length > 1 && (
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {project.images.slice(1, 4).map((img, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: '80px',
+                      height: '56px',
+                      borderRadius: '6px',
+                      overflow: 'hidden',
+                      border: '1px solid #d0d0d0',
+                    }}
+                  >
+                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
+          <div>
+            <p
+              style={{
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '14px',
+                color: '#444',
+                lineHeight: 1.85,
+                marginBottom: '24px',
+              }}
+            >
+              {project.description}
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {project.tech.map(t => (
+                <span key={t} className="tech-tag">{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+/* ── Work Section ── */
+const Work = () => {
+  const titleRef = useRef(null);
+  const titleInView = useInView(titleRef, { once: true, margin: '-80px' });
+
+  return (
+  <section id="work" style={{ background: '#EBEBEB', overflow: 'hidden' }}>
+
+    {/* Black marquee strip */}
+    <div
+      style={{
+        background: '#111',
+        overflow: 'hidden',
+        padding: '18px 0',
+        borderTop: '1px solid #222',
+        borderBottom: '1px solid #222',
+      }}
+    >
+      <div className="marquee-work-track">
+        {[...Array(6)].map((_, i) => (
+          <span
+            key={i}
+            style={{
+              fontFamily: 'Josefin Sans, sans-serif',
+              fontSize: '13px',
+              letterSpacing: '4px',
+              color: '#555',
+              whiteSpace: 'nowrap',
+              paddingRight: '60px',
+              textTransform: 'uppercase',
+            }}
+          >
+            {MARQUEE_NAMES}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <div
+      style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '80px 80px',
+      }}
+    >
+      {/* Header row */}
+      <div
+        ref={titleRef}
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          marginBottom: '56px',
+          flexWrap: 'wrap',
+          gap: '24px',
+        }}
+      >
+        <div>
+          {['My', 'Work'].map((word, i) => (
+            <div key={word} style={{ overflow: 'hidden', lineHeight: 0.88 }}>
+              <motion.h2
+                initial={{ y: '110%' }}
+                animate={titleInView ? { y: '0%' } : {}}
+                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.76, 0, 0.24, 1] }}
+                style={{
+                  fontFamily: 'Josefin Sans, sans-serif',
+                  fontSize: 'clamp(52px, 8vw, 104px)',
+                  fontWeight: 800,
+                  color: '#111',
+                  letterSpacing: '-3px',
+                  lineHeight: 0.88,
+                  margin: 0,
+                }}
+              >
+                {word}
+              </motion.h2>
+            </div>
+          ))}
+        </div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={titleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.35, ease: [0.76, 0, 0.24, 1] }}
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '14px',
+            color: '#666',
+            maxWidth: '300px',
+            textAlign: 'right',
+            lineHeight: 1.7,
+            margin: 0,
+          }}
+        >
+          A selection of projects I've built — from mobile apps to web experiences.
+          Click any row to explore details.
+        </motion.p>
       </div>
 
-      {/* View all CTA */}
-      <div className="text-center mt-20 reveal">
+      {/* Projects list */}
+      <div style={{ borderTop: '1px solid #d0d0d0' }}>
+        {PROJECTS.map((project, idx) => (
+          <ProjectRow key={project.id} project={project} index={idx} />
+        ))}
+      </div>
+
+      {/* GitHub CTA */}
+      <div style={{ textAlign: 'center', marginTop: '60px' }}>
         <a
           href="https://github.com/Afriansyah"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105"
           style={{
-            border: '1.5px solid rgba(255,255,255,0.30)',
-            color: '#ffffff',
             fontFamily: 'Inter, sans-serif',
-            background: 'rgba(255,255,255,0.04)',
+            fontSize: '13px',
+            fontWeight: 500,
+            color: '#111',
+            border: '1px solid #d0d0d0',
+            borderRadius: '999px',
+            padding: '12px 32px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            textDecoration: 'none',
+            transition: 'border-color 0.2s, background 0.2s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 25px rgba(255,255,255,0.15)'; }}
-          onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#111'; e.currentTarget.style.background = 'rgba(0,0,0,0.03)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = '#d0d0d0'; e.currentTarget.style.background = 'transparent'; }}
         >
-          View All Projects on GitHub
+          View All on GitHub ↗
         </a>
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Work;

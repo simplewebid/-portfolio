@@ -1,290 +1,350 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 
-const SERVICE_ID      = 'service_e5pxh3o'
-const TEMPLATE_ID     = 'template_wzrfyhj'
-const PUBLIC_KEY      = 'xC0MtDrHjaEktFDxD'
-const WHATSAPP_NUMBER = '6285840017984'
+const SERVICE_ID  = 'service_e5pxh3o';
+const TEMPLATE_ID = 'template_wzrfyhj';
+const PUBLIC_KEY  = 'xC0MtDrHjaEktFDxD';
+const WHATSAPP_NUMBER = '6285840017984';
 
-/* ── Contact info items ── */
-const INFO = [
-  {
-    icon: <Mail className="w-5 h-5" style={{ color: '#c0c0c0' }} />,
-    label: 'Email',
-    value: 'afriansyah@student.unp.ac.id',
-    href: 'mailto:afriansyah@student.unp.ac.id',
-  },
-  {
-    icon: <Phone className="w-5 h-5" style={{ color: '#c0c0c0' }} />,
-    label: 'WhatsApp',
-    value: '+62 858-4001-7984',
-    href: 'https://wa.me/6285840017984',
-  },
-  {
-    icon: <MapPin className="w-5 h-5" style={{ color: '#c0c0c0' }} />,
-    label: 'Lokasi',
-    value: 'Padang, Indonesia',
-    href: 'https://maps.google.com/?q=Padang,+West+Sumatra,+Indonesia',
-  },
-  {
-    icon: <Linkedin className="w-5 h-5" style={{ color: '#c0c0c0' }} />,
-    label: 'LinkedIn',
-    value: '/in/afri-ansyah-400a963b4',
-    href: 'https://www.linkedin.com/in/afri-ansyah-400a963b4',
-  },
-];
-
-/* ── Input component ── */
-const Field = ({ label, children }) => (
-  <div>
-    <label
-      className="block text-gray-400 text-xs font-medium mb-2 uppercase tracking-wider"
-      style={{ fontFamily: 'Inter, sans-serif' }}
-    >
-      {label}
-    </label>
-    {children}
-  </div>
-);
-
-/* ── Contact Section ── */
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
-  const [loading, setLoading]   = useState(false)
-  const [status, setStatus]     = useState('')
+  const formRef = useRef(null);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: '-80px' });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus]     = useState(null);   // 'success' | 'error' | 'empty' | null
+  const [loading, setLoading]   = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const handleChange = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleEmail = async (e) => {
-    e.preventDefault()
+  const handleEmail = async e => {
+    e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
-      setStatus('empty')
-      return
+      setStatus('empty'); return;
     }
-    setLoading(true)
+    setLoading(true);
     try {
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-        from_name:  formData.name,
-        from_email: formData.email,
-        message:    formData.message,
-        name:       formData.name,
-        email:      formData.email,
-      }, PUBLIC_KEY)
-      setStatus('success')
-      setFormData({ name: '', email: '', message: '' })
-    } catch (error) {
-      setStatus('error')
+      await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY);
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+    } catch {
+      setStatus('error');
+    } finally {
+      setLoading(false);
+      setTimeout(() => setStatus(null), 4000);
     }
-    setLoading(false)
-  }
+  };
 
   const handleWhatsApp = () => {
-    if (!formData.name || !formData.message) {
-      setStatus('empty')
-      return
-    }
-    const text = `Halo Afri! Saya ${formData.name}.\n\n${formData.message}\n\nEmail: ${formData.email}`
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank')
-  }
+    const text = encodeURIComponent(`Halo Afri! Saya ${formData.name || 'tertarik'} ingin tahu lebih lanjut tentang layananmu.`);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
+  };
+
+  /* ── small input styles ── */
+  const inputStyle = {
+    width: '100%',
+    padding: '14px 0',
+    background: 'transparent',
+    border: 'none',
+    borderBottom: '1px solid rgba(255,255,255,0.15)',
+    color: '#fff',
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+    boxSizing: 'border-box',
+  };
+
+  /* ── contact link card ── */
+  const LinkCard = ({ label, value, href, icon }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px',
+        padding: '20px 0',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        textDecoration: 'none',
+        group: true,
+      }}
+      onMouseEnter={e => e.currentTarget.querySelector('.lc-value').style.color = '#fff'}
+      onMouseLeave={e => e.currentTarget.querySelector('.lc-value').style.color = '#aaa'}
+    >
+      <div
+        style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          border: '1px solid rgba(255,255,255,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          color: '#888',
+        }}
+      >
+        {icon}
+      </div>
+      <div>
+        <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', color: '#555', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '3px' }}>
+          {label}
+        </div>
+        <div
+          className="lc-value"
+          style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px', color: '#aaa', transition: 'color 0.2s' }}
+        >
+          {value}
+        </div>
+      </div>
+    </a>
+  );
 
   return (
     <section
       id="contact"
-      className="py-32 relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #000000 0%, #0d0d0d 50%, #000000 100%)' }}
+      style={{ background: '#111', overflow: 'hidden' }}
     >
-      {/* bottom glow */}
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-64 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.06), transparent 70%)', filter: 'blur(30px)' }}
-      />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-
-        {/* ── Heading ── */}
-        <div className="text-center mb-20">
-          <p className="section-label reveal" style={{ color: '#888888', fontFamily: 'Inter, sans-serif' }}>
-            GET IN TOUCH
-          </p>
-          <h2
-            className="text-4xl md:text-6xl font-bold text-white reveal"
-            style={{ fontFamily: 'Josefin Sans, sans-serif' }}
+        ref={sectionRef}
+        style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '100px 80px',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '80px',
+          alignItems: 'start',
+        }}
+      >
+        {/* ── LEFT: info ── */}
+        <motion.div
+          initial={{ opacity: 0, x: -60 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        >
+          {/* badge */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '999px',
+              padding: '6px 14px',
+              marginBottom: '40px',
+            }}
           >
-            Contact <span className="gradient-text">Me</span>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: '#888', letterSpacing: '2px', textTransform: 'uppercase' }}>
+              Available for work
+            </span>
+          </div>
+
+          <h2
+            style={{
+              fontFamily: 'Josefin Sans, sans-serif',
+              fontSize: 'clamp(48px, 6.5vw, 88px)',
+              fontWeight: 800,
+              color: '#fff',
+              letterSpacing: '-3px',
+              lineHeight: 0.9,
+              margin: '0 0 32px',
+            }}
+          >
+            Let's<br />Work<br />Together
           </h2>
-          <div className="heading-divider reveal" />
-        </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <p
+            style={{
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '14px',
+              color: '#777',
+              lineHeight: 1.85,
+              maxWidth: '380px',
+              marginBottom: '48px',
+            }}
+          >
+            Ada proyek menarik? Saya terbuka untuk kolaborasi, freelance, maupun
+            diskusi ide. Kirim pesan dan saya akan merespons dalam 24 jam.
+          </p>
 
-          {/* ── Left: Contact Info ── */}
-          <div className="reveal-left">
-            <h3
-              className="text-2xl md:text-3xl font-bold text-white mb-4"
-              style={{ fontFamily: 'Josefin Sans, sans-serif' }}
-            >
-              Let's Build Something{' '}
-              <span className="gradient-text">Amazing</span>
-            </h3>
-            <p
-              className="text-gray-400 text-base leading-relaxed mb-10 max-w-md"
-              style={{ fontFamily: 'Inter, sans-serif' }}
-            >
-              Have a project in mind, a job opportunity, or just want to say hi?
-              Send me a message and I'll get back to you as soon as possible.
-            </p>
-
-            <div className="space-y-5">
-              {INFO.map(item => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 group"
-                >
-                  <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center glass-card shrink-0 transition-all duration-300 group-hover:scale-110"
-                  style={{ border: '1px solid rgba(255,255,255,0.12)' }}
-                  onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 20px rgba(255,255,255,0.12)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
-                  >
-                    {item.icon}
-                  </div>
-                  <div>
-                    <p
-                      className="text-gray-500 text-xs mb-0.5 uppercase tracking-wider"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
-                    >
-                      {item.label}
-                    </p>
-                    <p
-                      className="text-sm font-medium transition-colors duration-200 group-hover:text-white"
-                      style={{ color: '#c0c0c0', fontFamily: 'Inter, sans-serif' }}
-                    >
-                      {item.value}
-                    </p>
-                  </div>
-                </a>
-              ))}
-            </div>
-
-            {/* Availability badge */}
-            <div
-              className="inline-flex items-center gap-3 mt-10 px-5 py-3 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.18)' }}
-            >
-              <span className="relative flex h-3 w-3">
-                <span
-                  className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: 'rgba(255,255,255,0.8)' }}
-                />
-                <span className="relative inline-flex rounded-full h-3 w-3" style={{ background: '#ffffff' }} />
-              </span>
-              <span className="text-sm font-medium" style={{ color: '#e0e0e0', fontFamily: 'Inter, sans-serif' }}>
-                Open for Collaboration &amp; Freelance
-              </span>
-            </div>
+          {/* Contact links */}
+          <div>
+            <LinkCard
+              label="Email"
+              value="afriansyah@student.unp.ac.id"
+              href="mailto:afriansyah@student.unp.ac.id"
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} width="16" height="16">
+                  <path d="M4 4h16v16H4zM4 4l8 9 8-9" />
+                </svg>
+              }
+            />
+            <LinkCard
+              label="WhatsApp"
+              value="+62 858-4001-7984"
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} width="16" height="16">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                </svg>
+              }
+            />
+            <LinkCard
+              label="LinkedIn"
+              value="Afriansyah"
+              href="https://www.linkedin.com/in/afriansyah"
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} width="16" height="16">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                  <rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" />
+                </svg>
+              }
+            />
+            <LinkCard
+              label="Location"
+              value="Padang, Sumatera Barat — Indonesia"
+              href="https://maps.google.com/?q=Padang,West+Sumatra"
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} width="16" height="16">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+                </svg>
+              }
+            />
           </div>
+        </motion.div>
 
-          {/* ── Right: Form / Success ── */}
-          <div className="reveal-right">
-            <form
-              onSubmit={handleEmail}
-              className="glass-card p-8 md:p-10 rounded-3xl space-y-6"
-              style={{ border: '1px solid rgba(255,255,255,0.10)' }}
-            >
-              <h3
-                className="text-xl font-bold text-white mb-2"
-                style={{ fontFamily: 'Josefin Sans, sans-serif' }}
+        {/* ── RIGHT: form ── */}
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+        >
+          <form ref={formRef} onSubmit={handleEmail} noValidate>
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', color: '#555', letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                Your Name
+              </label>
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Nama kamu"
+                style={inputStyle}
+                onFocus={e => e.target.style.borderBottomColor = 'rgba(255,255,255,0.5)'}
+                onBlur={e => e.target.style.borderBottomColor = 'rgba(255,255,255,0.15)'}
+              />
+            </div>
+
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', color: '#555', letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                Email Address
+              </label>
+              <input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="email@contoh.com"
+                style={inputStyle}
+                onFocus={e => e.target.style.borderBottomColor = 'rgba(255,255,255,0.5)'}
+                onBlur={e => e.target.style.borderBottomColor = 'rgba(255,255,255,0.15)'}
+              />
+            </div>
+
+            <div style={{ marginBottom: '40px' }}>
+              <label style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', color: '#555', letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                Message
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tulis pesanmu di sini..."
+                rows={5}
+                style={{
+                  ...inputStyle,
+                  resize: 'none',
+                  lineHeight: 1.7,
+                }}
+                onFocus={e => e.target.style.borderBottomColor = 'rgba(255,255,255,0.5)'}
+                onBlur={e => e.target.style.borderBottomColor = 'rgba(255,255,255,0.15)'}
+              />
+            </div>
+
+            {/* Status messages */}
+            {status === 'success' && (
+              <div style={{ marginBottom: '20px', padding: '12px 16px', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '8px', fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#4ade80' }}>
+                Pesan terkirim! Terima kasih, saya akan segera merespons. ✓
+              </div>
+            )}
+            {status === 'error' && (
+              <div style={{ marginBottom: '20px', padding: '12px 16px', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '8px', fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#f87171' }}>
+                Gagal mengirim. Coba lagi atau hubungi via WhatsApp.
+              </div>
+            )}
+            {status === 'empty' && (
+              <div style={{ marginBottom: '20px', padding: '12px 16px', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '8px', fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#fbbf24' }}>
+                Lengkapi semua field terlebih dahulu.
+              </div>
+            )}
+
+            {/* Buttons */}
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  flex: 1,
+                  minWidth: '160px',
+                  padding: '14px 28px',
+                  background: '#fff',
+                  color: '#111',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '999px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.6 : 1,
+                  transition: 'opacity 0.2s, transform 0.2s',
+                  letterSpacing: '0.5px',
+                }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.transform = 'scale(1.02)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}
               >
-                Send Me a Message
-              </h3>
+                {loading ? 'Mengirim...' : 'Kirim Email →'}
+              </button>
 
-              <div className="grid sm:grid-cols-2 gap-5">
-                <Field label="Your Name">
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    className="dark-input"
-                  />
-                </Field>
-                <Field label="Email Address">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="john@example.com"
-                    className="dark-input"
-                  />
-                </Field>
-              </div>
-
-              <Field label="Subject">
-                <input
-                  type="text"
-                  name="subject"
-                  placeholder="Project Proposal / Job Offer / Just saying hi…"
-                  className="dark-input"
-                />
-              </Field>
-
-              <Field label="Message">
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell me about your project, timeline, and budget…"
-                  rows={5}
-                  className="dark-input resize-none"
-                />
-              </Field>
-
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <button
-                  type="submit"
-                  onClick={handleEmail}
-                  disabled={loading}
-                  style={{
-                    background: loading ? '#333' : '#fff',
-                    color: '#000', padding: '12px 28px',
-                    border: 'none', borderRadius: '8px',
-                    fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s', fontFamily: 'Inter, sans-serif',
-                  }}
-                >
-                  {loading ? 'Sending...' : 'Send Email'}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleWhatsApp}
-                  style={{
-                    background: '#25D366', color: '#fff',
-                    padding: '12px 28px', border: 'none',
-                    borderRadius: '8px', fontWeight: 700,
-                    cursor: 'pointer', transition: 'all 0.2s',
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                >
-                  WhatsApp
-                </button>
-              </div>
-
-              {status === 'success' && <p style={{ color: '#4ade80', marginTop: '12px', fontFamily: 'Inter, sans-serif' }}>✓ Pesan terkirim ke email!</p>}
-              {status === 'error'   && <p style={{ color: '#f87171', marginTop: '12px', fontFamily: 'Inter, sans-serif' }}>✗ Gagal kirim, coba WhatsApp.</p>}
-              {status === 'empty'   && <p style={{ color: '#fbbf24', marginTop: '12px', fontFamily: 'Inter, sans-serif' }}>⚠ Isi semua field dulu!</p>}
-            </form>
-          </div>
-
-        </div>
+              <button
+                type="button"
+                onClick={handleWhatsApp}
+                style={{
+                  flex: 1,
+                  minWidth: '160px',
+                  padding: '14px 28px',
+                  background: 'transparent',
+                  color: '#fff',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: '999px',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.2s',
+                  letterSpacing: '0.5px',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
+              >
+                WhatsApp ↗
+              </button>
+            </div>
+          </form>
+        </motion.div>
       </div>
     </section>
   );
