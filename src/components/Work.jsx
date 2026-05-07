@@ -11,8 +11,6 @@ import kue1     from '../assets/kua1.png';
 import kue2     from '../assets/kue2.png';
 import kue3     from '../assets/kue3.png';
 import kue4     from '../assets/kue4.png';
-import handtrack1 from '../assets/handtrack1.png';
-import handtrack2 from '../assets/handtrack2.png';
 import kostin1  from '../assets/kostin1.png';
 import kostin2  from '../assets/kostin2.png';
 import kostin3  from '../assets/kostin3.png';
@@ -21,16 +19,19 @@ import joki1    from '../assets/joki1.png';
 import joki2    from '../assets/joki2.png';
 import joki3    from '../assets/joki3.png';
 import joki4    from '../assets/joki4.png';
-import seria1   from '../assets/seria1.png';
-import seria2   from '../assets/seria2.png';
-import seria3   from '../assets/seria3.png';
-import seria4   from '../assets/seria4.png';
-import seria5   from '../assets/seria5.png';
+import volt1    from '../assets/Web Pengukuran Tegangan AC dan DC 1.jpeg';
+import volt2    from '../assets/Web Pengukuran Tegangan AC dan DC 2.jpeg';
+import volt3    from '../assets/Web Pengukuran Tegangan AC dan DC 3.jpeg';
+import volt4    from '../assets/Web Pengukuran Tegangan AC dan DC 5.jpeg';
+import smk1     from '../assets/WEB SMK N 2 SAROLANGUN 1.jpeg';
+import smk2     from '../assets/WEB SMK N 2 SAROLANGUN 2.jpeg';
+import smk3     from '../assets/WEB SMK N 2 SAROLANGUN 3.jpeg';
+import smk4     from '../assets/WEB SMK N 2 SAROLANGUN 4.jpeg';
 
 const PROJECTS = [
   {
     id: 1,
-    title: 'Aplikasi Saku',
+    title: 'Aplikasi Saku UNP',
     subtitle: 'Mobile App — Android',
     description: 'Aplikasi manajemen keuangan Android khusus mahasiswa Universitas Negeri Padang. Dilengkapi fitur login menggunakan NIM, pencatatan transaksi harian, pengelolaan budget per kategori, dan laporan keuangan berupa grafik interaktif.',
     tech: ['Flutter', 'Dart', 'SQLite', 'sqflite', 'Provider', 'Material Design'],
@@ -38,7 +39,7 @@ const PROJECTS = [
   },
   {
     id: 2,
-    title: 'Kost.in UNP',
+    title: 'Aplikasi kost.in UNP',
     subtitle: 'Mobile App — Flutter',
     description: 'Aplikasi mobile untuk pencarian dan manajemen kost di sekitar Universitas Negeri Padang. Dilengkapi fitur pencarian kost, detail lokasi, kontak pemilik via WhatsApp, dan peta lokasi. Dibangun dengan Flutter dan database lokal SQLite.',
     tech: ['Flutter', 'Dart', 'SQLite', 'Provider', 'url_launcher'],
@@ -46,7 +47,7 @@ const PROJECTS = [
   },
   {
     id: 3,
-    title: 'Kue By Tys',
+    title: 'Web Kue By Tys',
     subtitle: 'Web — React',
     description: 'Website toko kue online modern dengan tampilan elegan. Menampilkan katalog produk kue, section promo, testimoni pelanggan. Dibangun dengan React TypeScript dan Tailwind CSS.',
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
@@ -54,31 +55,31 @@ const PROJECTS = [
   },
   {
     id: 4,
-    title: 'Joki Tugas Website',
+    title: 'web Joki Tugas Website',
     subtitle: 'Web — HTML/CSS/JS',
     description: 'Website jasa penyelesaian tugas akademik terpercaya. Dilengkapi hero section animasi, carousel testimoni, halaman kontak, dan garansi 100% original dengan revisi gratis.',
     tech: ['HTML5', 'CSS3', 'JavaScript', 'AOS Animation'],
     images: [joki1, joki2, joki3, joki4],
   },
   {
-    id: 5,
-    title: 'Seria Kopi',
-    subtitle: 'Web — Next.js',
-    description: 'Website kedai kopi modern dengan desain elegan dan animasi halus. Menampilkan menu kopi, galeri produk, dan pengalaman visual yang memanjakan. Dibangun dengan Next.js 14, TypeScript, dan Framer Motion.',
-    tech: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
-    images: [seria1, seria2, seria3, seria4, seria5],
+    id: 7,
+    title: 'Web Pengukuran Tegangan AC dan DC',
+    subtitle: 'Web — Instrumentation',
+    description: 'Web untuk menampilkan hasil pengukuran tegangan AC dan DC. Menyajikan visualisasi data yang rapi dan mudah dibaca, dengan tampilan modern dan responsif.',
+    tech: ['Web', 'UI/UX', 'Responsive'],
+    images: [volt1, volt2, volt3, volt4],
   },
   {
-    id: 6,
-    title: 'HandTrack AR Web',
-    subtitle: 'Web — AR / WebRTC',
-    description: 'Aplikasi Augmented Reality berbasis web yang mendeteksi gerakan tangan secara real-time menggunakan MediaPipe Hands. Menampilkan efek neon skeleton pada tangan dengan background Matrix Rain. Berjalan langsung di browser.',
-    tech: ['JavaScript', 'MediaPipe', 'Canvas API', 'WebRTC'],
-    images: [handtrack1, handtrack2],
+    id: 8,
+    title: 'WEB SMK N 2 SAROLANGUN',
+    subtitle: 'Web — School Profile',
+    description: 'Website profil sekolah SMK Negeri 2 Sarolangun dengan tampilan modern dan informasi yang mudah diakses.',
+    tech: ['Web', 'UI/UX', 'Responsive'],
+    images: [smk1, smk2, smk3, smk4],
   },
 ];
 
-const MARQUEE_NAMES = 'APLIKASI SAKU \u2022 KOST.IN UNP \u2022 KUE BY TYS \u2022 JOKI TUGAS \u2022 SERIA KOPI \u2022 HANDTRACK AR \u2022 ';
+const MARQUEE_NAMES = 'APLIKASI SAKU UNP \u2022 APLIKASI KOST.IN UNP \u2022 WEB KUE BY TYS \u2022 JOKI TUGAS \u2022 WEB PENGUKURAN TEGANGAN AC & DC \u2022 WEB SMK N 2 SAROLANGUN \u2022 ';
 
 /* ── Single project row ── */
 const ProjectRow = ({ project, index }) => {
@@ -396,7 +397,7 @@ const Work = () => {
       {/* GitHub CTA */}
       <div style={{ textAlign: 'center', marginTop: '60px' }}>
         <a
-          href="https://github.com/Afriansyah"
+          href="https://github.com/simplewebid"
           target="_blank"
           rel="noopener noreferrer"
           style={{
